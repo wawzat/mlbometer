@@ -11,10 +11,8 @@ import atexit
 from time import sleep
 #import statistics
 from random import randint
-from spotipy.oauth2 import SpotifyOAuth
-#import spotipy.util as util
-from spotipy.exceptions import SpotifyException
-from requests.exceptions import ReadTimeout
+#from requests.exceptions import ReadTimeout
+import mlbgame
 
 pwr_pin = 27
 
