@@ -170,7 +170,7 @@ def get_games():
         day = mlbgame.day(2021, 5, 16)
         for game in day:
             game_list.append(game)
-    return games
+    return game_list
 
 # Main
 try:
