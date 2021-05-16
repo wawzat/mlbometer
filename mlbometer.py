@@ -193,7 +193,8 @@ try:
         while ET <= 60:
             sleep(1)
             for game in game_list:
-                led_write_time_1 = write_matrix(game, "1", led_write_time_1)
+                print(game)
+                #led_write_time_1 = write_matrix(game, "1", led_write_time_1)
                 sleep(10)
             #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
             ET += 1
