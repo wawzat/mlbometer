@@ -167,7 +167,7 @@ def get_games():
     try:
         day = mlbgame.day(2021, 5, 16)
         for game in day:
-            game_list.append(game)
+            game_list.append(game.nice_score)
     except ValueError as e:
         print(e)
     return game_list
@@ -193,7 +193,7 @@ try:
         while ET <= 60:
             sleep(1)
             for game in game_list:
-                #print(game)
+                print(game)
                 led_write_time_1 = write_matrix(game, "1", led_write_time_1)
                 sleep(10)
             #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
