@@ -170,6 +170,8 @@ def get_games():
         day = mlbgame.day(2021, 5, 16)
         for game in day:
             game_list.append(game)
+    except ValueError as e:
+        print(e)
     return game_list
 
 # Main
