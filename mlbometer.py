@@ -195,7 +195,7 @@ try:
             sleep(1)
             for game in game_list:
                 print('Home: ', game[1], 'Away: ', game[0])
-                led_write_time_1 = write_matrix(game, "1", led_write_time_1)
+                led_write_time_1 = write_matrix(game[1], "1", led_write_time_1)
                 sleep(10)
             #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
             ET += 1
