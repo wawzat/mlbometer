@@ -12,7 +12,8 @@ from time import sleep
 #import statistics
 from random import randint
 #from requests.exceptions import ReadTimeout
-import mlbgame
+#import mlbgame
+import statsapi
 
 pwr_pin = 27
 
@@ -163,15 +164,21 @@ def move_stepper(indicator_pos_1, indicator_pos_2, write_time):
 
 
 def get_games():
-    game_list= []
-    try:
-        day = mlbgame.day(2021, 5, 16)
-        for game in day:
-            game_split = str(game).split(' at ')
-            game_list.append(game_split)
-    except ValueError as e:
-        print(e)
-    return game_list
+    sched = statsapi.schedule(start_date='05/16/2021',end_date='05/16/2021')
+    games_list = []
+    for game in sched:
+        #print(game['game_id'], game['summary'])
+        game_id = game['game_id']
+        home_name = game['home_name']
+        away_name = game['away_name']
+        home_score = game['home_score']
+        away_score = game['away_score']
+        home_str = f"{home_name} ({home_score})"
+        away_str = f"{away_name} ({away_score})"
+        game_list = [away_str, home_str]
+        games_list.append(game_list)
+    return games_list
+
 
 # Main
 try:
@@ -185,7 +192,7 @@ try:
     sleep(1)
     while True:
         ET = 0
-        game_list = get_games()
+        games_list = get_games()
 
         #sleep(1)
         #led_write_time_2 = write_matrix(track_string, "0", led_write_time_2)
@@ -193,7 +200,7 @@ try:
             #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
         while ET <= 60:
             sleep(1)
-            for game in game_list:
+            for game in games_list:
                 print('Home: ', game[1], 'Away: ', game[0])
                 led_write_time_1 = write_matrix(game[1], "1", led_write_time_1)
                 sleep(.2)
