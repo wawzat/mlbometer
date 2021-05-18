@@ -1,5 +1,5 @@
-# Get currently playing track from Spotify
-# James S. Lucas - 20210418
+# Get MLB scores for games played on given day and display on LED matrix.
+# James S. Lucas - 20210517
 
 import RPi.GPIO as GPIO
 #from datetime import date
@@ -201,10 +201,10 @@ try:
         while ET <= 60:
             sleep(1)
             for game in games_list:
-                print('Home: ', game[1], 'Away: ', game[0])
-                led_write_time_1 = write_matrix(game[1], "1", led_write_time_1)
+                print('Away: ', game[0], 'Home: ', game[1])
+                led_write_time_1 = write_matrix(game[0], "1", led_write_time_1)
                 sleep(.2)
-                led_write_time_2 = write_matrix(game[0], "0", led_write_time_2)
+                led_write_time_2 = write_matrix(game[1], "0", led_write_time_2)
                 sleep(10)
             #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
             ET += 1
