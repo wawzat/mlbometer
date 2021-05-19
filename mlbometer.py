@@ -1,18 +1,13 @@
 # Get MLB scores for games played on given day and display on LED matrix.
+# Uses MLB-SStatsAPI by GitHub user toddrob99  https://github.com/toddrob99/MLB-StatsAPI
 # James S. Lucas - 20210517
 
 import RPi.GPIO as GPIO
-#from datetime import date
-#import sys
 import datetime
-#from operator import itemgetter
 from smbus import SMBus
 import atexit
 from time import sleep
-#import statistics
 from random import randint
-#from requests.exceptions import ReadTimeout
-#import mlbgame
 import statsapi
 
 pwr_pin = 27
@@ -164,19 +159,47 @@ def move_stepper(indicator_pos_1, indicator_pos_2, write_time):
 
 
 def get_games():
-    sched = statsapi.schedule(start_date='05/16/2021',end_date='05/16/2021')
+    sched = statsapi.schedule(start_date='05/17/2021',end_date='05/17/2021')
     games_list = []
     for game in sched:
         #print(game['game_id'], game['summary'])
         game_id = game['game_id']
+        home_id = game['home_id']
+        away_id = game['away_id']
         home_name = game['home_name']
         away_name = game['away_name']
         home_score = game['home_score']
         away_score = game['away_score']
         home_str = f"{home_name} ({home_score})"
         away_str = f"{away_name} ({away_score})"
-        game_list = [away_str, home_str]
+
+        home_team = statsapi.get('team', {'teamId':home_id})
+        away_team = statsapi.get('team', {'teamId':away_id})
+        home_league = home_team['teams'][0]['league']['id']
+        away_league = away_team['teams'][0]['league']['id']
+        home_div = home_team['teams'][0]['division']['id']
+        away_div = away_team['teams'][0]['division']['id']
+        home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.now().year, standingsTypes=None, date=None)
+        away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.now().year, standingsTypes=None, date=None)
+        #pprint.pprint(home_standings, width=1)
+        #print(home_id, home_league, home_div)
+        home_teams = home_standings[home_div]['teams']
+        home_team_dict = next(item for item in home_teams if item["team_id"] == int(home_id))
+        home_team_wins = home_team_dict['w']
+        home_team_losses = home_team_dict['l']
+        home_team_percentage = home_team_wins / (home_team_wins + home_team_losses) * 100
+        away_teams = away_standings[away_div]['teams']
+        away_team_dict = next(item for item in away_teams if item["team_id"] == int(away_id))
+        away_team_wins = away_team_dict['w']
+        away_team_losses = away_team_dict['l']
+        away_team_percentage = away_team_wins / (away_team_wins + away_team_losses) * 100
+
+        game_list = [
+            away_str, away_team_percentage,
+            home_str, home_team_percentage
+            ]
         games_list.append(game_list)
+        print("Home wins: ", home_team_wins, "Away wins: ", away_team_wins)
     return games_list
 
 
@@ -201,10 +224,12 @@ try:
         while ET <= 60:
             sleep(1)
             for game in games_list:
-                print('Away: ', game[0], 'Home: ', game[1])
+                print('Away: ', game[0], 'Home: ', game[2])
                 led_write_time_1 = write_matrix(game[0], "1", led_write_time_1)
                 sleep(.2)
-                led_write_time_2 = write_matrix(game[1], "0", led_write_time_2)
+                led_write_time_2 = write_matrix(game[2], "0", led_write_time_2)
+                sleep(.2)
+                write_time = move_stepper(str(int(game[1] * 21)), str(int(game[3] * 21)), write_time)
                 sleep(10)
             #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
             ET += 1
