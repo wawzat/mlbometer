@@ -159,7 +159,7 @@ def move_stepper(indicator_pos_1, indicator_pos_2, write_time):
 
 
 def get_games():
-    sched = statsapi.schedule(start_date='05/17/2021',end_date='05/17/2021')
+    sched = statsapi.schedule(start_date='05/18/2021',end_date='05/18/2021')
     games_list = []
     for game in sched:
         #print(game['game_id'], game['summary'])
