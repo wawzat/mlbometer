@@ -1,6 +1,6 @@
 # Get MLB scores for games played on given day and display on LED matrix.
 # Uses MLB-SStatsAPI by GitHub user toddrob99  https://github.com/toddrob99/MLB-StatsAPI
-# James S. Lucas - 20210517
+# James S. Lucas - 20210519
 
 import RPi.GPIO as GPIO
 import datetime
