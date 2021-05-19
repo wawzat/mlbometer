@@ -221,7 +221,7 @@ try:
         #led_write_time_2 = write_matrix(track_string, "0", led_write_time_2)
         #sleep(0.5)
             #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
-        while ET <= 60:
+        while ET <= 180:
             sleep(1)
             for game in games_list:
                 print('Away: ', game[0], 'Home: ', game[2])
@@ -231,8 +231,8 @@ try:
                 sleep(.2)
                 write_time = move_stepper(str(int(game[1] * 21)), str(int(game[3] * 21)), write_time)
                 sleep(10)
-            #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
-            ET += 1
+                #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
+                ET += 10.5
 except KeyboardInterrupt:
     print(" ")
     print("End by Ctrl-C")
