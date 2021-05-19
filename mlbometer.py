@@ -179,8 +179,8 @@ def get_games():
         away_league = away_team['teams'][0]['league']['id']
         home_div = home_team['teams'][0]['division']['id']
         away_div = away_team['teams'][0]['division']['id']
-        home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.now().year, standingsTypes=None, date=None)
-        away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.now().year, standingsTypes=None, date=None)
+        home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
+        away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
         #pprint.pprint(home_standings, width=1)
         #print(home_id, home_league, home_div)
         home_teams = home_standings[home_div]['teams']
