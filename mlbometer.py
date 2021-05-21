@@ -208,8 +208,8 @@ def get_games(giants, start_date, end_date):
 
 # Main
 try:
-    start_date = "05/18/2021"
-    end_date = "05/18/2021"
+    start_date = "05/19/2021"
+    end_date = "05/19/2021"
     giants = False
 
     led_write_time_1 = datetime.datetime.now()
