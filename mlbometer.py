@@ -167,9 +167,8 @@ def get_games(giants, start_date, end_date):
         home_id = game['home_id']
         away_id = game['away_id']
         if not giants:
-            print("not giants")
             if home_id == 137 or away_id == 137:
-                break
+                continue
         home_name = game['home_name']
         away_name = game['away_name']
         home_score = game['home_score']
