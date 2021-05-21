@@ -7,7 +7,8 @@ import datetime
 from smbus import SMBus
 import atexit
 from time import sleep
-from random import randint
+#from random import randint
+import argparse
 import statsapi
 
 pwr_pin = 27
