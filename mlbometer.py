@@ -158,14 +158,17 @@ def move_stepper(indicator_pos_1, indicator_pos_2, write_time):
     return write_time
 
 
-def get_games():
-    sched = statsapi.schedule(start_date='05/18/2021',end_date='05/18/2021')
+def get_games(giants, start_date, end_date):
+    sched = statsapi.schedule(start_date, end_date)
     games_list = []
     for game in sched:
         #print(game['game_id'], game['summary'])
         game_id = game['game_id']
         home_id = game['home_id']
         away_id = game['away_id']
+        if giants:
+            if home_id == 137 or away_id == 137:
+                break
         home_name = game['home_name']
         away_name = game['away_name']
         home_score = game['home_score']
@@ -205,6 +208,10 @@ def get_games():
 
 # Main
 try:
+    start_date = "05/18/2021"
+    end_date = "05/18/2021"
+    giants = False
+
     led_write_time_1 = datetime.datetime.now()
     led_write_time_2 = datetime.datetime.now()
     write_time = datetime.datetime.now()
@@ -215,7 +222,7 @@ try:
     sleep(1)
     while True:
         ET = 0
-        games_list = get_games()
+        games_list = get_games(giants, start_date, end_date)
 
         #sleep(1)
         #led_write_time_2 = write_matrix(track_string, "0", led_write_time_2)
