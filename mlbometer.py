@@ -1,6 +1,6 @@
 # Get MLB scores for games played on given day and display on LED matrix.
 # Uses MLB-SStatsAPI by GitHub user toddrob99  https://github.com/toddrob99/MLB-StatsAPI
-# James S. Lucas - 20210519
+# James S. Lucas - 20210521
 
 import RPi.GPIO as GPIO
 import datetime
@@ -26,6 +26,30 @@ bus = SMBus(1)
 
 num_i2c_errors = 0
 last_i2c_error_time = datetime.datetime.now()
+
+
+def get_arguments():
+   parser = argparse.ArgumentParser(
+   description='Display MLB game scores and win percentage for a given date.',
+   prog='mlbometer',
+   usage='%(prog)s [-d <date>], [-s <spoilers off>]',
+   formatter_class=argparse.RawDescriptionHelpFormatter,
+   )
+   g=parser.add_argument_group(title='arguments',
+         description='''    -y, --year   year to get data for.
+   -d  --date  mm/dd/yyyy.
+   -s  --spoiler  spoiler off (hard coded SF Giants).                                                       ''') 
+   g.add_argument('-d', '--date',
+                  type=str,
+                  dest='date',
+                  help=argparse.SUPPRESS)
+   g.add_argument('-s', '--spoiler',
+                  action='store_true',
+                  dest='spoiler',
+                  help=argparse.SUPPRESS)
+
+   args = parser.parse_args()
+   return(args)
 
 
 def exit_function():
@@ -158,7 +182,7 @@ def move_stepper(indicator_pos_1, indicator_pos_2, write_time):
     return write_time
 
 
-def get_games(giants, start_date, end_date):
+def get_games(spoiler, start_date, end_date):
     sched = statsapi.schedule(start_date, end_date)
     games_list = []
     for game in sched:
@@ -166,7 +190,7 @@ def get_games(giants, start_date, end_date):
         game_id = game['game_id']
         home_id = game['home_id']
         away_id = game['away_id']
-        if not giants:
+        if spoiler:
             if home_id == 137 or away_id == 137:
                 continue
         home_name = game['home_name']
@@ -208,6 +232,7 @@ def get_games(giants, start_date, end_date):
 
 # Main
 try:
+    args = get_arguments()
     start_date = "05/19/2021"
     end_date = "05/19/2021"
     giants = False
@@ -222,7 +247,7 @@ try:
     sleep(1)
     while True:
         ET = 0
-        games_list = get_games(giants, start_date, end_date)
+        games_list = get_games(args.spoiler, args.date, args.date)
 
         #sleep(1)
         #led_write_time_2 = write_matrix(track_string, "0", led_write_time_2)
