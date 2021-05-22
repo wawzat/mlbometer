@@ -9,6 +9,7 @@ import atexit
 from time import sleep
 #from random import randint
 import argparse
+from requests.exceptions import ReadTimeout
 import statsapi
 
 pwr_pin = 27
@@ -184,7 +185,11 @@ def move_stepper(indicator_pos_1, indicator_pos_2, write_time):
 
 
 def get_games(spoiler, start_date, end_date):
-    sched = statsapi.schedule(start_date, end_date)
+    try:
+        sched = statsapi.schedule(start_date, end_date)
+    except ReadTimeout:
+        sleep(10)
+        pass
     games_list = []
     for game in sched:
         #print(game['game_id'], game['summary'])
@@ -207,8 +212,12 @@ def get_games(spoiler, start_date, end_date):
         away_league = away_team['teams'][0]['league']['id']
         home_div = home_team['teams'][0]['division']['id']
         away_div = away_team['teams'][0]['division']['id']
-        home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
-        away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
+        try:
+            home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
+            away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
+        except ReadTimeout:
+            sleep(10)
+            pass
         #pprint.pprint(home_standings, width=1)
         #print(home_id, home_league, home_div)
         home_teams = home_standings[home_div]['teams']
@@ -227,7 +236,7 @@ def get_games(spoiler, start_date, end_date):
             home_str, home_team_percentage
             ]
         games_list.append(game_list)
-        print("Home wins: ", home_team_wins, "Away wins: ", away_team_wins)
+        #print("Home wins: ", home_team_wins, "Away wins: ", away_team_wins)
     return games_list
 
 
@@ -257,7 +266,7 @@ try:
         while ET <= 180:
             sleep(1)
             for game in games_list:
-                print('Away: ', game[0], 'Home: ', game[2])
+                print(game[0], ' at ', game[2])
                 led_write_time_1 = write_matrix(game[0], "1", led_write_time_1)
                 sleep(.2)
                 led_write_time_2 = write_matrix(game[2], "0", led_write_time_2)
