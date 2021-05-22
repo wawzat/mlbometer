@@ -193,6 +193,9 @@ def get_games(spoiler, start_date, end_date):
     games_list = []
     for game in sched:
         #print(game['game_id'], game['summary'])
+        status = game['status']
+        if 'Progress' not in status and 'Final' not in status:
+            continue
         game_id = game['game_id']
         home_id = game['home_id']
         away_id = game['away_id']
@@ -243,8 +246,8 @@ def get_games(spoiler, start_date, end_date):
 # Main
 try:
     args = get_arguments()
-    start_date = "05/19/2021"
-    end_date = "05/19/2021"
+    start_date = "05/22/2021"
+    end_date = "05/22/2021"
     giants = False
 
     led_write_time_1 = datetime.datetime.now()
