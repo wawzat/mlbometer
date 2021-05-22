@@ -10,6 +10,7 @@ from time import sleep
 #from random import randint
 import argparse
 from requests.exceptions import ReadTimeout
+from urllib3.exceptions import MaxRetryError, NewConnectionError
 import statsapi
 
 pwr_pin = 27
@@ -190,6 +191,12 @@ def get_games(spoiler, start_date, end_date):
     except ReadTimeout:
         sleep(10)
         pass
+    except NewConnectionError:
+        sleep(20)
+        pass
+    except MaxRetryError:
+        sleep(20)
+        pass
     games_list = []
     for game in sched:
         #print(game['game_id'], game['summary'])
@@ -221,6 +228,13 @@ def get_games(spoiler, start_date, end_date):
         except ReadTimeout:
             sleep(10)
             pass
+        except NewConnectionError:
+            sleep(20)
+            pass
+        except MaxRetryError:
+            sleep(20)
+            pass
+
         #pprint.pprint(home_standings, width=1)
         #print(home_id, home_league, home_div)
         home_teams = home_standings[home_div]['teams']
