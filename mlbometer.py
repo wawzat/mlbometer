@@ -303,7 +303,7 @@ try:
                 sleep(.2)
                 led_write_time_2 = write_matrix(game[2], "0", led_write_time_2)
                 sleep(.2)
-                write_time = move_stepper(str(int(game[1] * 21)), str(int(game[3] * 21)), write_time)
+                write_time = move_stepper(str(int(game[1] * 21 + 10)), str(int(game[3] * 21)), write_time)
                 sleep(10)
                 #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
                 ET += 10.5
