@@ -10,7 +10,7 @@ from time import sleep
 #from random import randint
 import argparse
 from requests.exceptions import ReadTimeout
-from urllib3.exceptions import MaxRetryError, NewConnectionError
+from urllib3.exceptions import MaxRetryError, NewConnectionError, ConnectionError
 import statsapi
 
 pwr_pin = 27
@@ -189,12 +189,19 @@ def get_games(spoiler, start_date, end_date):
     try:
         sched = statsapi.schedule(start_date, end_date)
     except ReadTimeout:
-        sleep(10)
+        print("ReadTimeout Error")
+        sleep(20)
         pass
     except NewConnectionError:
+        print("NewConnection Error")
         sleep(20)
         pass
     except MaxRetryError:
+        print("MaxRetry Error")
+        sleep(20)
+        pass
+    except ConnectionError:
+        print("Connection Error")
         sleep(20)
         pass
     games_list = []
@@ -226,12 +233,19 @@ def get_games(spoiler, start_date, end_date):
             home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
             away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
         except ReadTimeout:
-            sleep(10)
+            print("ReadTimeout Error")
+            sleep(20)
             pass
         except NewConnectionError:
+            print("MewConnection Error")
             sleep(20)
             pass
         except MaxRetryError:
+            print("MaxRetry Error")
+            sleep(20)
+            pass
+        except ConnectionError:
+            print(ConnectionError)
             sleep(20)
             pass
 
