@@ -266,6 +266,7 @@ def get_games(spoiler, start_date, end_date):
             away_str, away_team_percentage,
             home_str, home_team_percentage
             ]
+        print(game_list)
         games_list.append(game_list)
         #print("Home wins: ", home_team_wins, "Away wins: ", away_team_wins)
     return games_list
