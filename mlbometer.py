@@ -13,7 +13,7 @@ from requests.exceptions import ReadTimeout
 from urllib3.exceptions import MaxRetryError, NewConnectionError, ConnectionError
 import statsapi
 
-pwr_pin = 27
+pwr_pin = 17
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(pwr_pin, GPIO.OUT)
