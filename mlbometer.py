@@ -60,6 +60,8 @@ def exit_function():
     Called by exception handler'''
     print(" ")
     print("End by atexit")
+    led_write_time_1 = datetime.datetime.now()
+    led_write_time_2 = datetime.datetime.now()
     global pwr_pin
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(pwr_pin, GPIO.OUT)
@@ -68,11 +70,15 @@ def exit_function():
     write_time = datetime.datetime.now()
     sleep(1)
     write_time = move_stepper(str(indicator_pos_1), str(indicator_pos_2), write_time)
-    sleep(4)
+    sleep(.5)
+    led_write_time_1 = write_matrix(" ", "1", led_write_time_1)
+    sleep(.2)
+    led_write_time_2 = write_matrix(" ", "0", led_write_time_2)
+    sleep(3)
     GPIO.output(pwr_pin, GPIO.LOW)
-    sleep(1)
+    sleep(.5)
     GPIO.cleanup()
-    sleep(1)
+    sleep(.5)
    #system("stty echo")
     exit()
 
