@@ -230,7 +230,7 @@ def get_games(spoiler, start_date, end_date):
         if 'Final' not in status:
             away_str = f"{away_name} ({away_score})"
         else:
-            away_str = f"{away_str} F"
+            away_str = f"{away_name} ({away_score}) F"
         home_team = statsapi.get('team', {'teamId':home_id})
         away_team = statsapi.get('team', {'teamId':away_id})
         home_league = home_team['teams'][0]['league']['id']
