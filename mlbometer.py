@@ -239,6 +239,7 @@ def get_games(spoiler, start_date, end_date):
         away_div = away_team['teams'][0]['division']['id']
         try:
             home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
+            sleep(1)
             away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
         except ReadTimeout:
             print("ReadTimeout Error")
