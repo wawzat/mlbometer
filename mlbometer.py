@@ -231,11 +231,11 @@ def get_games(spoiler, start_date, end_date):
             away_str = f"{away_name} ({away_score})"
         else:
             if home_score > away_score:
-                home_str = f"{home_name} ({home_score} - {away_score}) W"
-                away_str = f"{away_name} ({away_score} - {home_score}) L"
+                home_str = f"{home_name} ({home_score}-{away_score}) W"
+                away_str = f"{away_name} ({away_score}-{home_score}) L"
             else:
-                home_str = f"{home_name} ({home_score} - {away_score}) L"
-                away_str = f"{away_name} ({away_score} - {home_score}) W"
+                home_str = f"{home_name} ({home_score}-{away_score}) L"
+                away_str = f"{away_name} ({away_score}-{home_score}) W"
         home_team = statsapi.get('team', {'teamId':home_id})
         away_team = statsapi.get('team', {'teamId':away_id})
         home_league = home_team['teams'][0]['league']['id']
