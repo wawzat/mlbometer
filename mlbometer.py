@@ -316,6 +316,7 @@ try:
             #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
         while ET <= 180:
             sleep(1)
+            zeroed = 0
             for game in games_list:
                 print(game[0], ' at ', game[2])
                 led_write_time_1 = write_matrix(game[0], "1", led_write_time_1)
@@ -324,8 +325,10 @@ try:
                 sleep(.2)
                 write_time = move_stepper(str(int(game[1] * 21 + 10)), str(int(game[3] * 21)), write_time)
                 sleep(12)
-                if ET >= 90:
+                if ET >= 90 and zeroed = 0:
                     zero_gauges(write_time)
+                    sleep(.05)
+                    zeroed = 1
                 #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
                 ET += 12.5
 except KeyboardInterrupt:
