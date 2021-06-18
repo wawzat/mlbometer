@@ -325,7 +325,7 @@ try:
                 sleep(.2)
                 write_time = move_stepper(str(int(game[1] * 21 + 10)), str(int(game[3] * 21)), write_time)
                 sleep(12)
-                if ET >= 90 and zeroed = 0:
+                if ET >= 90 and zeroed == 0:
                     zero_gauges(write_time)
                     sleep(.05)
                     zeroed = 1
