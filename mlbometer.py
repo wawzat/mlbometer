@@ -65,11 +65,9 @@ def exit_function():
     global pwr_pin
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(pwr_pin, GPIO.OUT)
-    indicator_pos_1 = 0
-    indicator_pos_2 = 0
     write_time = datetime.datetime.now()
     sleep(1)
-    write_time = move_stepper(str(indicator_pos_1), str(indicator_pos_2), write_time)
+    zero_gauges(write_time)
     sleep(.5)
     led_write_time_1 = write_matrix(" ", "1", led_write_time_1)
     sleep(.2)
@@ -189,6 +187,13 @@ def move_stepper(indicator_pos_1, indicator_pos_2, write_time):
         #print("T: " + str(indicator_pos_2))
         write_time = datetime.datetime.now()
     return write_time
+
+
+def zero_gauges(write_time):
+    indicator_pos_1 = 0
+    indicator_pos_2 = 0
+    write_time = move_stepper(str(indicator_pos_1), str(indicator_pos_2), write_time)
+
 
 
 def get_games(spoiler, start_date, end_date):
@@ -318,9 +323,11 @@ try:
                 led_write_time_2 = write_matrix(game[2], "0", led_write_time_2)
                 sleep(.2)
                 write_time = move_stepper(str(int(game[1] * 21 + 10)), str(int(game[3] * 21)), write_time)
-                sleep(10)
+                sleep(12)
+                if ET >= 90:
+                    zero_gauges(write_time)
                 #write_time = move_stepper(str(int(popularity * 21)), str(int(percent_complete * 21)), write_time)
-                ET += 10.5
+                ET += 12.5
 except KeyboardInterrupt:
     print(" ")
     print("End by Ctrl-C")
