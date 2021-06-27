@@ -307,9 +307,9 @@ try:
     while True:
         ET = 0
         games_list = []
-        while not games_list:
-            games_list = get_games(args.spoiler, args.date, args.date)
-            sleep(15)
+        #while not games_list:
+        games_list = get_games(args.spoiler, args.date, args.date)
+        sleep(15)
         #sleep(1)
         #led_write_time_2 = write_matrix(track_string, "0", led_write_time_2)
         #sleep(0.5)
