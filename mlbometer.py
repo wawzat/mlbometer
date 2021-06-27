@@ -199,6 +199,7 @@ def zero_gauges(write_time):
 def get_games(spoiler, start_date, end_date):
     try:
         sched = statsapi.schedule(start_date, end_date)
+        print(sched)
     except ReadTimeout:
         print("ReadTimeout Error")
         sleep(20)
@@ -294,14 +295,10 @@ def get_games(spoiler, start_date, end_date):
 # Main
 try:
     args = get_arguments()
-    start_date = "05/22/2021"
-    end_date = "05/22/2021"
-    giants = False
 
     led_write_time_1 = datetime.datetime.now()
     led_write_time_2 = datetime.datetime.now()
     write_time = datetime.datetime.now()
-    previous_track_string = "NONE"
     GPIO.output(pwr_pin, GPIO.HIGH)
     sleep(4)
     write_time = move_stepper("0", "0", write_time)
@@ -309,7 +306,6 @@ try:
     while True:
         ET = 0
         games_list = get_games(args.spoiler, args.date, args.date)
-
         #sleep(1)
         #led_write_time_2 = write_matrix(track_string, "0", led_write_time_2)
         #sleep(0.5)
