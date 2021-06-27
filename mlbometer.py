@@ -304,9 +304,9 @@ try:
     sleep(4)
     write_time = move_stepper("0", "0", write_time)
     sleep(1)
-    games_list = []
     while True:
         ET = 0
+        games_list = []
         while not games_list:
             games_list = get_games(args.spoiler, args.date, args.date)
             sleep(15)
