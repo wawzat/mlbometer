@@ -199,7 +199,8 @@ def zero_gauges(write_time):
 def get_games(spoiler, start_date, end_date):
     try:
         sched = statsapi.schedule(start_date, end_date)
-        print(sched)
+        for game in sched:
+            print(game['home_name'])
     except ReadTimeout:
         print("ReadTimeout Error")
         sleep(20)
