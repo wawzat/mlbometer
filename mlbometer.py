@@ -199,8 +199,6 @@ def zero_gauges(write_time):
 def get_games(spoiler, start_date, end_date):
     try:
         sched = statsapi.schedule(start_date, end_date)
-        for game in sched:
-            print(game['home_name'])
     except ReadTimeout:
         print("ReadTimeout Error")
         sleep(20)
@@ -218,99 +216,100 @@ def get_games(spoiler, start_date, end_date):
         sleep(20)
         pass
     games_list = []
-    if sched:
-        for game in sched:
-            #print(game['game_id'], game['summary'])
-            status = game['status']
-            if 'Progress' not in status and 'Final' not in status:
+    for game in sched:
+        #print(game['game_id'], game['summary'])
+        status = game['status']
+        if 'Progress' not in status and 'Final' not in status:
+            continue
+        game_id = game['game_id']
+        home_id = game['home_id']
+        away_id = game['away_id']
+        if spoiler:
+            if home_id == 137 or away_id == 137:
                 continue
-            game_id = game['game_id']
-            home_id = game['home_id']
-            away_id = game['away_id']
-            if spoiler:
-                if home_id == 137 or away_id == 137:
-                    continue
-            home_name = game['home_name']
-            away_name = game['away_name']
-            home_score = game['home_score']
-            away_score = game['away_score']
-            if 'Final' not in status:
-                home_str = f"{home_name} ({home_score})"
-                away_str = f"{away_name} ({away_score})"
+        home_name = game['home_name']
+        away_name = game['away_name']
+        home_score = game['home_score']
+        away_score = game['away_score']
+        if 'Final' not in status:
+            home_str = f"{home_name} ({home_score})"
+            away_str = f"{away_name} ({away_score})"
+        else:
+            if home_score > away_score:
+                home_str = f"{home_name} ({home_score}-{away_score}) W"
+                away_str = f"{away_name} ({away_score}-{home_score}) L"
             else:
-                if home_score > away_score:
-                    home_str = f"{home_name} ({home_score}-{away_score}) W"
-                    away_str = f"{away_name} ({away_score}-{home_score}) L"
-                else:
-                    home_str = f"{home_name} ({home_score}-{away_score}) L"
-                    away_str = f"{away_name} ({away_score}-{home_score}) W"
-            home_team = statsapi.get('team', {'teamId':home_id})
-            away_team = statsapi.get('team', {'teamId':away_id})
-            home_league = home_team['teams'][0]['league']['id']
-            away_league = away_team['teams'][0]['league']['id']
-            home_div = home_team['teams'][0]['division']['id']
-            away_div = away_team['teams'][0]['division']['id']
-            try:
-                home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
-                sleep(1)
-                away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
-            except ReadTimeout:
-                print("ReadTimeout Error")
-                sleep(20)
-                pass
-            except NewConnectionError:
-                print("MewConnection Error")
-                sleep(20)
-                pass
-            except MaxRetryError:
-                print("MaxRetry Error")
-                sleep(20)
-                pass
-            except ConnectionError:
-                print(ConnectionError)
-                sleep(20)
-                pass
+                home_str = f"{home_name} ({home_score}-{away_score}) L"
+                away_str = f"{away_name} ({away_score}-{home_score}) W"
+        home_team = statsapi.get('team', {'teamId':home_id})
+        away_team = statsapi.get('team', {'teamId':away_id})
+        home_league = home_team['teams'][0]['league']['id']
+        away_league = away_team['teams'][0]['league']['id']
+        home_div = home_team['teams'][0]['division']['id']
+        away_div = away_team['teams'][0]['division']['id']
+        try:
+            home_standings = statsapi.standings_data(leagueId=home_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
+            sleep(1)
+            away_standings = statsapi.standings_data(leagueId=away_league, division="all", include_wildcard=True, season= datetime.datetime.now().year, standingsTypes=None, date=None)
+        except ReadTimeout:
+            print("ReadTimeout Error")
+            sleep(20)
+            pass
+        except NewConnectionError:
+            print("MewConnection Error")
+            sleep(20)
+            pass
+        except MaxRetryError:
+            print("MaxRetry Error")
+            sleep(20)
+            pass
+        except ConnectionError:
+            print(ConnectionError)
+            sleep(20)
+            pass
 
-            #pprint.pprint(home_standings, width=1)
-            #print(home_id, home_league, home_div)
-            home_teams = home_standings[home_div]['teams']
-            home_team_dict = next(item for item in home_teams if item["team_id"] == int(home_id))
-            home_team_wins = home_team_dict['w']
-            home_team_losses = home_team_dict['l']
-            home_team_percentage = home_team_wins / (home_team_wins + home_team_losses) * 100
-            away_teams = away_standings[away_div]['teams']
-            away_team_dict = next(item for item in away_teams if item["team_id"] == int(away_id))
-            away_team_wins = away_team_dict['w']
-            away_team_losses = away_team_dict['l']
-            away_team_percentage = away_team_wins / (away_team_wins + away_team_losses) * 100
+        #pprint.pprint(home_standings, width=1)
+        #print(home_id, home_league, home_div)
+        home_teams = home_standings[home_div]['teams']
+        home_team_dict = next(item for item in home_teams if item["team_id"] == int(home_id))
+        home_team_wins = home_team_dict['w']
+        home_team_losses = home_team_dict['l']
+        home_team_percentage = home_team_wins / (home_team_wins + home_team_losses) * 100
+        away_teams = away_standings[away_div]['teams']
+        away_team_dict = next(item for item in away_teams if item["team_id"] == int(away_id))
+        away_team_wins = away_team_dict['w']
+        away_team_losses = away_team_dict['l']
+        away_team_percentage = away_team_wins / (away_team_wins + away_team_losses) * 100
 
-            game_list = [
-                away_str, away_team_percentage,
-                home_str, home_team_percentage
-                ]
-            print(game_list)
-            games_list.append(game_list)
-            #print("Home wins: ", home_team_wins, "Away wins: ", away_team_wins)
+        game_list = [
+            away_str, away_team_percentage,
+            home_str, home_team_percentage
+            ]
+        print(game_list)
+        games_list.append(game_list)
+        #print("Home wins: ", home_team_wins, "Away wins: ", away_team_wins)
     return games_list
 
 
 # Main
 try:
     args = get_arguments()
+    start_date = "05/22/2021"
+    end_date = "05/22/2021"
+    giants = False
 
     led_write_time_1 = datetime.datetime.now()
     led_write_time_2 = datetime.datetime.now()
     write_time = datetime.datetime.now()
+    previous_track_string = "NONE"
     GPIO.output(pwr_pin, GPIO.HIGH)
     sleep(4)
     write_time = move_stepper("0", "0", write_time)
     sleep(1)
     while True:
         ET = 0
-        games_list = []
-        #while not games_list:
         games_list = get_games(args.spoiler, args.date, args.date)
-        sleep(15)
+
         #sleep(1)
         #led_write_time_2 = write_matrix(track_string, "0", led_write_time_2)
         #sleep(0.5)
